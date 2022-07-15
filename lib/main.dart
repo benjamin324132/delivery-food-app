@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:delivery_app/provider/app_provider.dart';
-import 'package:delivery_app/screens/home/home_scrren.dart';
+import 'package:delivery_app/screens/home/home_screen.dart';
 import 'package:delivery_app/screens/login/login_screen.dart';
 import 'package:delivery_app/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -30,14 +31,16 @@ class MyApp extends StatelessWidget {
           value: AppProvider(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          primarySwatch: Colors.yellow,
+      child: OverlaySupport(
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            primarySwatch: Colors.yellow,
+          ),
+          home: const RootScreen(),
         ),
-        home: const RootScreen(),
       ),
     );
   }

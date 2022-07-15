@@ -1,7 +1,9 @@
+import 'package:delivery_app/components/status_tag.dart';
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/models/order.dart';
 import 'package:delivery_app/screens/order/order_screen.dart';
 import 'package:delivery_app/services/services.dart';
+import 'package:delivery_app/utils/parseStatus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -64,7 +66,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             return false;
           },
           child: SingleChildScrollView(
-            physics: ScrollPhysics(),
+            physics:const ScrollPhysics(),
             child: Column(
               children: [
                 const SizedBox(
@@ -103,10 +105,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Orden ${orders[index].id}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Orden ${orders[index].id}",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12),
+                                  ),
+                                  StatusTag(
+                                    status: orders[index].status,
+                                  )
+                                ],
                               ),
                               Text(
                                 "Fecha $date",

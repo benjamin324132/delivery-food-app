@@ -7,6 +7,7 @@ import 'package:delivery_app/size_config.dart';
 import 'package:delivery_app/utils/showSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 class DishScreen extends StatefulWidget {
@@ -51,7 +52,12 @@ class _DishScreenState extends State<DishScreen> {
       "dishId": dish.id
     };
     Provider.of<AppProvider>(context, listen: false).add(item);
-    showSnackBar(context, "Se agrego exitosamente");
+    //showSnackBar(context, "Se agrego exitosamente");
+    showSimpleNotification(
+      const Text("Platillo agregado"),
+      background: Colors.grey.shade50,
+      duration: const Duration(seconds: 2),
+    );
   }
 
   @override

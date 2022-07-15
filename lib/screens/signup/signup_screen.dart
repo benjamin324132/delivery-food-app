@@ -2,10 +2,12 @@
 
 import 'package:delivery_app/components/default_button.dart';
 import 'package:delivery_app/constants.dart';
-import 'package:delivery_app/screens/home/home_scrren.dart';
+import 'package:delivery_app/screens/home/home_screen.dart';
 import 'package:delivery_app/services/services.dart';
 import 'package:delivery_app/size_config.dart';
 import 'package:delivery_app/utils/showSnackbar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -24,11 +26,20 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
+  late final FirebaseMessaging _messaging;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    registerNotification();
+    super.initState();
+  }
 
   void signup(context) async {
     try {
+      String? token = await _messaging.getToken();
       var response = await services.signup(
-          name.text, email.text, phone.text, password.text, "");
+          name.text, email.text, phone.text, password.text, token!);
       var jwt = response['token'];
       if (jwt != null) {
         await storage.write(key: "jwt", value: jwt);
@@ -38,6 +49,23 @@ class _SignupScreenState extends State<SignupScreen> {
     } catch (err) {
       print(err);
       showSnackBar(context, "Error");
+    }
+  }
+
+   void registerNotification() async {
+    await Firebase.initializeApp();
+    _messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else {
+      print('User declined or has not accepted permission');
     }
   }
 

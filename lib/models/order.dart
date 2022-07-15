@@ -11,6 +11,7 @@ class Order {
   String? deliveryAdress;
   String? createdAt;
   String? updatedAt;
+  String? status;
 
   Order(
       {this.deliveryLocation,
@@ -24,7 +25,8 @@ class Order {
       this.paymentMethod,
       this.deliveryAdress,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.status});
 
   Order.fromJson(Map<String, dynamic> json) {
     deliveryLocation = json['deliveryLocation'] != null
@@ -46,6 +48,7 @@ class Order {
     deliveryAdress = json['deliveryAdress'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    status = json['status'];
   }
 }
 

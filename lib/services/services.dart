@@ -165,4 +165,45 @@ class Services {
       throw Exception("Error");
     }
   }
+
+  Future<dynamic> getMe() async {
+    String? token = await storage.read(key: "jwt");
+    String url = "$BASE_URL/api/v1/users/me";
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer $token"
+    };
+
+    var response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      //var error = json.decode(response.body);
+      //throw Exception(error['message']);
+      throw Exception("Error");
+    }
+  }
+
+  Future<dynamic> updateMe(dynamic data) async {
+    String? token = await storage.read(key: "jwt");
+    String url = "$BASE_URL/api/v1/users/me";
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer $token"
+    };
+    final body = jsonEncode(data);
+
+    var response = await http.put(Uri.parse(url), body: body, headers: headers);
+    
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      print(json.decode(response.body));
+      //var error = json.decode(response.body);
+      //throw Exception(error['message']);
+      throw Exception("Error");
+    }
+  }
 }

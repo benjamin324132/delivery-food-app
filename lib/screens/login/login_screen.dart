@@ -2,11 +2,13 @@
 
 import 'package:delivery_app/components/default_button.dart';
 import 'package:delivery_app/constants.dart';
-import 'package:delivery_app/screens/home/home_scrren.dart';
+import 'package:delivery_app/screens/home/home_screen.dart';
 import 'package:delivery_app/screens/signup/signup_screen.dart';
 import 'package:delivery_app/services/services.dart';
 import 'package:delivery_app/size_config.dart';
 import 'package:delivery_app/utils/showSnackbar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,10 +25,19 @@ class _LogInScreenState extends State<LogInScreen> {
   final storage = FlutterSecureStorage();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  late final FirebaseMessaging _messaging;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    registerNotification();
+    super.initState();
+  }
 
   void logIn(context) async {
     try {
-      var response = await services.logIn(email.text, password.text, "");
+      String? token = await _messaging.getToken();
+      var response = await services.logIn(email.text, password.text, token!);
       var jwt = response['token'];
       if (jwt != null) {
         await storage.write(key: "jwt", value: jwt);
@@ -36,6 +47,23 @@ class _LogInScreenState extends State<LogInScreen> {
     } catch (err) {
       print(err);
       showSnackBar(context, "Error");
+    }
+  }
+
+   void registerNotification() async {
+    await Firebase.initializeApp();
+    _messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else {
+      print('User declined or has not accepted permission');
     }
   }
 
@@ -84,6 +112,9 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               SizedBox(
                 height: defaultPadding,
+              ),
+              const SizedBox(
+                height: 20,
               ),
               DefaultButton(
                 press: () {

@@ -1,5 +1,7 @@
+import 'package:delivery_app/screens/map/map_screen.dart';
 import 'package:delivery_app/screens/orders/orders_screen.dart';
 import 'package:delivery_app/screens/search/search_screen.dart';
+import 'package:delivery_app/screens/user/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boxicons/flutter_boxicons.dart';
 import '../constants.dart';
@@ -73,7 +75,10 @@ class CustomBottomNavBar extends StatelessWidget {
                       ? kPrimaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => UserScreen()));
+                },
               ),
             ],
           )),

@@ -4,7 +4,33 @@ import 'dart:collection';
 //70 + 250 + 360
 class AppProvider extends ChangeNotifier {
   final List<dynamic> _items = [
-    /*{
+   /* {
+      "name": "Steak Taco",
+      "image":
+          "https://cdn.dribbble.com/userupload/2671447/file/original-e44b3cd5a3e697f1c2fc9f358e9425d8.jpg",
+      "price": 35,
+      "qty": 2,
+      "coments": "",
+      "dishId": "627d63fa88176d101178fa74"
+    },
+    {
+      "name": "Pzza",
+      "image":
+          "https://cdn.dribbble.com/userupload/2713951/file/original-a0fa3b862cde83133a27613b78be2a34.png",
+      "price": 250,
+      "qty": 1,
+      "coments": "",
+      "dishId": "627d644588176d101178fa77"
+    },
+    {
+      "name": "Hamburguer",
+      "image":
+          "https://cdn.dribbble.com/userupload/2713953/file/original-f85abe94e5b7582667e36bfff0e537a3.png",
+      "price": 120,
+      "qty": 3,
+      "coments": "",
+      "dishId": "627d648688176d101178fa7a"
+    },{
       "name": "Steak Taco",
       "image":
           "https://cdn.dribbble.com/userupload/2671447/file/original-e44b3cd5a3e697f1c2fc9f358e9425d8.jpg",

@@ -37,10 +37,10 @@ class CartDish extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
+             /* Text(
                 "Fast Food",
                 style: Theme.of(context).textTheme.caption,
-              ),
+              ),*/
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: defaultPadding / 2),

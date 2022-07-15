@@ -4,8 +4,10 @@ import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/screens/succes/succes_order.dart';
 import 'package:delivery_app/services/services.dart';
 import 'package:delivery_app/size_config.dart';
+import 'package:delivery_app/utils/getLocation.dart';
 import 'package:delivery_app/utils/showSnackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -24,44 +26,30 @@ class _CartScreenState extends State<CartScreen> {
   void order(context) async {
     var data = Provider.of<AppProvider>(context, listen: false).items;
     try {
-      bool serviceEnabled;
-      LocationPermission permission;
-
-      // Test if location services are enabled.
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return Future.error('Location services are disabled.');
-      }
-
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        // Permissions are denied forever, handle appropriately.
-        return Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-      }
-
       // When we reach here, permissions are granted and we can
       // continue accessing the position of the device.
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      print(position == null
-          ? 'Unknown'
-          : '${position.latitude.toString()}, ${position.longitude.toString()}');
-      var response = await services.crateOrder(
-          data, "Address", position.latitude, position.longitude);
-      //print(response);
-      //showSnackBar(context, "Orden creada exitosamente");
-      Provider.of<AppProvider>(context, listen: false).removeAll();
+      Position? position = await getCurrentLocation();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          position!.latitude, position.longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark placeMark = placemarks[0];
+        String? street = placeMark.street;
+        //String? name = placeMark.name;
+        String? subLocality = placeMark.locality;
+        String? postalCode = placeMark.postalCode;
+        String addressPostion = "$street, $subLocality, $postalCode";
+        print(position == null
+            ? 'Unknown'
+            : '${position.latitude.toString()}, ${position.longitude.toString()}');
+        var response = await services.crateOrder(
+            data, addressPostion, position.latitude, position.longitude);
+        //print(response);
+        //showSnackBar(context, "Orden creada exitosamente");
+        Provider.of<AppProvider>(context, listen: false).removeAll();
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const SuccesOrder()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const SuccesOrder()));
+      }
     } catch (err) {
       print(err);
       showSnackBar(context, "Error");

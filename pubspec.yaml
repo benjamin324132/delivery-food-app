@@ -44,6 +44,11 @@ dependencies:
   video_player: ^2.4.2
   intl: ^0.17.0
   badges: ^2.0.2
+  firebase_core: ^1.18.0
+  firebase_messaging: ^11.4.2
+  overlay_support: ^2.0.1
+  google_maps_flutter: ^2.1.8
+  geocoding: ^2.0.2
 
 dev_dependencies:
   flutter_test:
